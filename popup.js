@@ -1,3 +1,6 @@
+const TIME_LIMIT_MINUTE = 60; // recording time limit (minute)
+const TIME_LIMIT_MILLISECOND = TIME_LIMIT_MINUTE * 60 * 1000;
+
 let interval;
 let timeLeft;
 
@@ -15,14 +18,14 @@ const displayStatus = function() { //function to handle the display of time and 
       chrome.runtime.sendMessage({currentTab: tabs[0].id}, (response) => {
         if(response) {
           chrome.storage.sync.get({
-            maxTime: 1200000,
+            maxTime: TIME_LIMIT_MILLISECOND,
             limitRemoved: false
           }, (options) => {
-            if(options.maxTime > 1200000) {
+            if(options.maxTime > TIME_LIMIT_MILLISECOND) {
               chrome.storage.sync.set({
-                maxTime: 1200000
+                maxTime: TIME_LIMIT_MILLISECOND
               });
-              timeLeft = 1200000 - (Date.now() - response)
+              timeLeft = TIME_LIMIT_MILLISECOND - (Date.now() - response)
             } else {
               timeLeft = options.maxTime - (Date.now() - response)
             }
@@ -77,14 +80,14 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     const cancelButton = document.getElementById('cancel');
     if(request.captureStarted && request.captureStarted === tabs[0].id) {
       chrome.storage.sync.get({
-        maxTime: 1200000,
+        maxTime: TIME_LIMIT_MILLISECOND,
         limitRemoved: false
       }, (options) => {
-        if(options.maxTime > 1200000) {
+        if(options.maxTime > TIME_LIMIT_MILLISECOND) {
           chrome.storage.sync.set({
-            maxTime: 1200000
+            maxTime: TIME_LIMIT_MILLISECOND
           });
-          timeLeft = 1200000 - (Date.now() - request.startTime)
+          timeLeft = TIME_LIMIT_MILLISECOND - (Date.now() - request.startTime)
         } else {
           timeLeft = options.maxTime - (Date.now() - request.startTime)
         }

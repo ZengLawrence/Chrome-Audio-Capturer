@@ -1,3 +1,6 @@
+const TIME_LIMIT_MINUTE = 60; // recording time limit (minute)
+const TIME_LIMIT_MILLISECOND = TIME_LIMIT_MINUTE * 60 * 1000;
+
 document.addEventListener('DOMContentLoaded', () => {
   const mute = document.getElementById('mute');
   const maxTime = document.getElementById('maxTime');
@@ -12,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //initial settings
   chrome.storage.sync.get({
     muteTab: false,
-    maxTime: 1200000,
+    maxTime: TIME_LIMIT_MILLISECOND,
     format: "mp3",
     quality: 192,
     limitRemoved: false
@@ -43,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   maxTime.onchange = () => {
     status.innerHTML = "";
-    if(maxTime.value > 20) {
-      maxTime.value = 20;
+    if(maxTime.value > TIME_LIMIT_MINUTE) {
+      maxTime.value = TIME_LIMIT_MINUTE;
     } else if (maxTime.value < 1) {
       maxTime.value = 1;
     } else if (isNaN(maxTime.value)) {
-      maxTime.value = 20;
+      maxTime.value = TIME_LIMIT_MINUTE;
     }
   }
 
